@@ -44,7 +44,8 @@ export const ValueNodeWrapper: React.FC<ValueNodeProps> = (props) => {
     customNodeDefinitions,
   } = props
   const { getStyles } = useTheme()
-  const { setCurrentlyEditingElement, setCollapseState } = useTreeState()
+  const { setCurrentlyEditingElement, setCollapseState, previousValue, setPreviousValue } =
+    useTreeState()
   const [value, setValue] = useState<typeof data | CollectionData>(
     // Bad things happen when you put a function into useState
     typeof data === 'function' ? INVALID_FUNCTION_STRING : data
@@ -129,6 +130,7 @@ export const ValueNodeWrapper: React.FC<ValueNodeProps> = (props) => {
 
   const handleChangeDataType = (type: DataType) => {
     const customNode = customNodeDefinitions.find((customNode) => customNode.name === type)
+    // setPreviousValue(data)
     if (customNode) {
       onEdit(customNode.defaultValue, path)
       setDataType(type)
@@ -185,8 +187,10 @@ export const ValueNodeWrapper: React.FC<ValueNodeProps> = (props) => {
 
   const handleCancel = () => {
     setCurrentlyEditingElement(null)
-    setValue(data)
+    if (previousValue !== undefined) onEdit(previousValue, path)
+    else setValue(data)
     setDataType(getDataType(data, customNodeData))
+    setPreviousValue(undefined)
   }
 
   const handleDelete = () => {

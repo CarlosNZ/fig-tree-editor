@@ -7,8 +7,8 @@
  *   dropped on can act on it)
  */
 
-import React, { createContext, useContext, useRef, useState } from 'react'
-import { JsonData, type CollectionKey } from './types'
+import React, { createContext, useContext, useState } from 'react'
+import { CollectionData, JsonData, ValueData, type CollectionKey } from './types'
 
 interface CollapseAllState {
   path: CollectionKey[]
@@ -29,7 +29,8 @@ interface TreeStateContext {
   areChildrenBeingEdited: (pathString: string) => boolean
   dragSource: DragSource
   setDragSource: (newState: DragSource) => void
-  previousValue: JsonData | null
+  previousValue: JsonData | undefined
+  setPreviousValue: (value: JsonData | undefined) => void
 }
 const initialContext: TreeStateContext = {
   collapseState: null,
@@ -40,7 +41,8 @@ const initialContext: TreeStateContext = {
   areChildrenBeingEdited: () => false,
   dragSource: { path: null, pathString: null },
   setDragSource: () => {},
-  previousValue: null,
+  previousValue: undefined,
+  setPreviousValue: () => {},
 }
 
 const TreeStateProviderContext = createContext(initialContext)
@@ -52,7 +54,7 @@ export const TreeStateProvider = ({ children }: { children: React.ReactNode }) =
     path: null,
     pathString: null,
   })
-  const previousValue = useRef(null)
+  const [previousValue, setPreviousValue] = useState<CollectionData | ValueData | undefined>()
 
   const doesPathMatch = (path: CollectionKey[]) => {
     if (collapseState === null) return false
@@ -87,7 +89,8 @@ export const TreeStateProvider = ({ children }: { children: React.ReactNode }) =
         // Drag-n-drop
         dragSource,
         setDragSource,
-        previousValue: previousValue.current,
+        previousValue,
+        setPreviousValue,
       }}
     >
       {children}
