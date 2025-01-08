@@ -126,7 +126,7 @@ export const EditButtons: React.FC<EditButtonProps> = ({
         </div>
       )}
       {customButtons?.map(({ Element, onClick }, i) => (
-        <div key={i} onClick={(e) => onClick(nodeData, e)}>
+        <div key={i} onClick={(e) => onClick && onClick(nodeData, e)}>
           <Element nodeData={nodeData} />
         </div>
       ))}

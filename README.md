@@ -254,11 +254,13 @@ In addition to the "Copy", "Edit" and "Delete" buttons that appear by each value
 
 ```js
 {
-  Element: React.FC,
-  onClick: (nodeData: NodeData, e: React.MouseEvent) => void
+  Element: React.FC<{ nodeData: NodeData }>,
+  onClick?: (nodeData: NodeData, e: React.MouseEvent) => void
 }
 ```
 Where `NodeData` is the same data structure received by the previous "Update Functions".
+
+The `onClick` is optional -- don't provide it if you have your own `onClick` handler within your button component.
 
 ## Filter functions
 
